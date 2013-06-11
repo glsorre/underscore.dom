@@ -42,8 +42,8 @@ test("CSS Manipulation", function(assert) {
 test("Reading Offset", function(assert) {
 	var el = document.getElementById('box');
 
-	assert.equal(_belt.offset(el).top, 50, "computed style red");
-	assert.equal(_belt.offset(el).left, 50, "computed style modified");
+	assert.equal(_belt.offset(el).top, 50, "offset top red");
+	assert.equal(_belt.offset(el).left, 50, "offset left modified");
 });
 
 module("Pub/Sub");
