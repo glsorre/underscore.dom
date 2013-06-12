@@ -48,7 +48,7 @@ test("Reading Offset", function(assert) {
 
 module("Pub/Sub");
 test("Publish/Subscribe Pattern", function(assert) {
-	var pubsub = _belt.PubSub();
+	var pubsub = _belt.Publisher();
 
 	var result = [];
 
