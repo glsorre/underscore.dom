@@ -1,3 +1,4 @@
+
 module("DOM Manipulation");
 
 test("Element Class Manipulation", function(assert) {
@@ -39,7 +40,7 @@ test("CSS Manipulation", function(assert) {
 });
 
 
-test("Reading Offset", function(assert) {
+/*test("Reading Offset", function(assert) {
 	var el = document.getElementById('box');
 
 	assert.equal(_belt.offset(el).top, 50, "offset top red");
@@ -48,7 +49,7 @@ test("Reading Offset", function(assert) {
 
 module("Pub/Sub");
 test("Publish/Subscribe Pattern", function(assert) {
-	var pubsub = _belt.Publisher();
+	var pubsub = _belt.tools.Publisher();
 
 	var result = [];
 
@@ -112,15 +113,4 @@ test("Publish/Subscribe Pattern", function(assert) {
 
 	assert.deepEqual(result, comparison, 'handle subscribed');
 
-});
-
-module("IE8");
-test("CSS Manipulation", function(assert) {
-	var el = document.getElementById('box');
-	var css_get_IE8 = {
-	  "color": "#000000",
-	  "background-color": "#fff"
-	};
-
-	assert.deepEqual(_belt.css(el, ['color', 'background-color']), css_get_IE8, "computed style red - IE 8");
-});
+});*/
