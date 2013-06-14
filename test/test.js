@@ -4,23 +4,23 @@ module("DOM Manipulation");
 test("Element Class Manipulation", function(assert) {
 	var el = document.getElementById('box');
 
-	assert.equal(_belt.hasClass(el, "test"), true, "el has class test");
+	assert.equal(belt.hasClass(el, "test"), true, "el has class test");
 
-	assert.equal(_belt.hasClass(el, "none"), false, "el has not class none");
+	assert.equal(belt.hasClass(el, "none"), false, "el has not class none");
 
-	_belt.addClass(el, "teschio");
+	belt.addClass(el, "teschio");
 	assert.equal(el.className, "prova test acab teschio", "added class teschio");
 
-	_belt.addClass(el, "teschio");
+	belt.addClass(el, "teschio");
 	assert.equal(el.className, "prova test acab teschio", "not readded class teschio");
 
-	_belt.removeClass(el, "test");
+	belt.removeClass(el, "test");
 	assert.equal(el.className, "prova acab teschio", "removed class test");
 
-	_belt.toggleClass(el, "teschio");
+	belt.toggleClass(el, "teschio");
 	assert.equal(el.className, "prova acab", "removed class teschio using toggle");
 
-	_belt.toggleClass(el, "teschio");
+	belt.toggleClass(el, "teschio");
 	assert.equal(el.className, "prova acab teschio", "added class teschio using toggle");
 });
 
@@ -35,21 +35,21 @@ test("CSS Manipulation", function(assert) {
   	"backgroundColor": "#f00"
 	};
 
-	assert.deepEqual(_belt.css(el, ['color', 'background-color']), css_get, "computed style red");
-	assert.deepEqual(_belt.css(el, css_apply), el.style, "computed style modified");
+	assert.deepEqual(belt.css(el, ['color', 'background-color']), css_get, "computed style red");
+	assert.deepEqual(belt.css(el, css_apply), el.style, "computed style modified");
 });
 
 
 /*test("Reading Offset", function(assert) {
 	var el = document.getElementById('box');
 
-	assert.equal(_belt.offset(el).top, 50, "offset top red");
-	assert.equal(_belt.offset(el).left, 50, "offset left modified");
+	assert.equal(belt.offset(el).top, 50, "offset top red");
+	assert.equal(belt.offset(el).left, 50, "offset left modified");
 });
 
 module("Pub/Sub");
 test("Publish/Subscribe Pattern", function(assert) {
-	var pubsub = _belt.tools.Publisher();
+	var pubsub = belt.tools.Publisher();
 
 	var result = [];
 
