@@ -1,21 +1,11 @@
 /* TO TEST
-belt: _belt
 
-hasClass: _nodeListHelper(_hasClass),
-addClass: _nodeListHelper(_addClass),
-removeClass: _nodeListHelper(_removeClass),
-toggleClass: _nodeListHelper(_toggleClass),
-css: _nodeListHelper(_css),
-is: _nodeListHelper(_is),
-find: _nodeListHelper(_find),
-parent: _nodeListHelper(_parent),
-position: _nodeListHelper(_position),
-offset: _nodeListHelper(_offset),
-width: _nodeListHelper(_width),
-height: _nodeListHelper(_height),
 native: _nodeListHelper(_native),
+
 on: _nodeListHelper(_on),
 off: _nodeListHelper(_off),
+
+_nodeListHelper
 
 Publisher: _Publisher,
 stopPropagation: _stopPropagation,
@@ -27,131 +17,110 @@ module("DOM Selection and Trasversing");
 test("DOM Selection", function(assert) {
 	var box = _.belt('#box')._wrapped;
 	var boxes = _.belt('.boxes')._wrapped;
+	var primo = _.belt('.boxes:first-child')._wrapped;
 
 	assert.equal(box, document.getElementById('box'), "#id selcted");
 	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), ".class selected");
+	assert.deepEqual(primo, document.querySelectorAll('.boxes:first-child')[0], ":first-child selected");
 });
 
-test("find() and paret() method", function(assert) {
-	/*var box = _.belt('#box')._wrapped;
-	var boxes = _.belt('.boxes')._wrapped;
+test("find(), parent(), is() methods", function(assert) {
+	var box = _.belt('.primo').parent();
+	var boxes = _.belt('#box').find('.boxes');
+	var is = _.belt('.primo').is('.boxes:first-child')
 
-	assert.equal(box, document.getElementById('box'), "#id selcted");
-	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), ".class selected");*/
+	assert.equal(box, document.getElementById('box'), "parent() worked");
+	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), "find() worked");
+	assert.equal(is, true, "is() worked");
 });
 
 module("DOM Manipulation");
 
 test("Element Class Manipulation", function(assert) {
-	var el = document.getElementById('box');
+	assert.equal(_.belt('#box').hasClass("prima"), true, "has class prima");
 
-	assert.equal(belt.hasClass(el, "test"), true, "el has class test");
+	assert.equal(_.belt('#box').hasClass("none"), false, "has not class none");
 
-	assert.equal(belt.hasClass(el, "none"), false, "el has not class none");
+	_.belt('#box').addClass("quarta");
+	assert.equal(document.getElementById('box').className, "prima seconda terza quarta", "added class quarta");
 
-	belt.addClass(el, "teschio");
-	assert.equal(el.className, "prova test acab teschio", "added class teschio");
+	_.belt('#box').addClass("quarta");
+	assert.equal(document.getElementById('box').className, "prima seconda terza quarta", "added class quarta");
 
-	belt.addClass(el, "teschio");
-	assert.equal(el.className, "prova test acab teschio", "not readded class teschio");
+	_.belt('#box').removeClass("quarta");
+	assert.equal(document.getElementById('box').className, "prima seconda terza", "removed class quarta");
 
-	belt.removeClass(el, "test");
-	assert.equal(el.className, "prova acab teschio", "removed class test");
+	_.belt('#box').toggleClass("terza");
+	assert.equal(document.getElementById('box').className, "prima seconda", "removed class terza by toggle");
 
-	belt.toggleClass(el, "teschio");
-	assert.equal(el.className, "prova acab", "removed class teschio using toggle");
-
-	belt.toggleClass(el, "teschio");
-	assert.equal(el.className, "prova acab teschio", "added class teschio using toggle");
+	_.belt('#box').toggleClass("terza");
+	assert.equal(document.getElementById('box').className, "prima seconda terza", "added class terza using toggle");
 });
 
 test("CSS Manipulation", function(assert) {
 	var el = document.getElementById('box');
 	var css_get = {
-  	"color": "rgb(0, 0, 0)",
-  	"background-color": "rgb(255, 255, 255)"
+  		"color": "rgb(0, 0, 0)",
+  		"background-color": "rgb(255, 255, 255)"
 	};
 	var css_apply = {
-		"color": "#fff",
-  	"backgroundColor": "#f00"
+		"color": "rgb(255, 255, 255)",
+  		"backgroundColor": "rgb(255, 0, 0)"
 	};
 
-	assert.deepEqual(belt.css(el, ['color', 'background-color']), css_get, "computed style red");
-	assert.deepEqual(belt.css(el, css_apply), el.style, "computed style modified");
+	assert.equal(_.belt('#box').css('width'), '100px', 'single computed style red');
+
+	_.belt('#box').css('width', '200px');
+	assert.equal('200px', el.style.width, 'single style modified');
+
+	assert.deepEqual(_.belt('#box').css(['color', 'background-color']), css_get, 'multiple computed style red');
+	
+	_.belt('#box').css(css_apply)
+	css_result = {
+		"color": el.style.color,
+		"backgroundColor": el.style.backgroundColor
+	}
+	assert.deepEqual(css_apply, css_result, 'mutiple style modified');
 });
 
+test("Elements Position and Dimensions", function(assert) {
+	assert.equal(_.belt('.terzo').width(), 120, "width red correctly");
+	assert.equal(_.belt('.terzo').height(), 120, "height red correctly");
 
-/*test("Reading Offset", function(assert) {
-	var el = document.getElementById('box');
+	var el = document.querySelector('.terzo');
+	_.belt('.terzo').width(140)
+	assert.equal(160, el.clientWidth, "width red correctly");
+	_.belt('.terzo').height(140)
+	assert.equal(160, el.clientHeight, "height red correctly");
 
-	assert.equal(belt.offset(el).top, 50, "offset top red");
-	assert.equal(belt.offset(el).left, 50, "offset left modified");
+	position_get = {
+		top: 110,
+		left: 110
+	}
+	offset_get = {
+		top: -9840,
+		left: -9840
+	}
+
+	assert.deepEqual(_.belt('.terzo').position(), position_get, "position red correctly");
+
+	assert.deepEqual(_.belt('.terzo').offset(), offset_get, "offset red correctly");
+
+	offset_set = {
+		top: 200,
+		left: 200
+	}
+	offset_get = {
+		top: -9740,
+		left: -9740
+	}
+	_.belt('.terzo').offset(offset_set);
+	assert.deepEqual(_.belt('.terzo').offset(), offset_get, "offset set correctly");
+	
 });
 
-module("Pub/Sub");
-test("Publish/Subscribe Pattern", function(assert) {
-	var pubsub = belt.tools.Publisher();
-
-	var result = [];
-
-	var comparison = [
-		{
-			topic: 'test',
-			fruits: ['melon', 'orange']
-		},
-		{
-			topic: 'test',
-			fruits: ['melon', 'orange']
-		}
-	];
-
-	function test(topic, args) {
-		var s = {
-			topic: topic,
-			fruits: args
-		}
-		result.push(s);
-	};
-
-	var handle1 = pubsub.subscribe('test', test);
-	var handle2 = pubsub.subscribe('test', test);
-
-	pubsub.publish('test', ['melon', 'orange']);
-
-	assert.deepEqual(result, comparison, 'two handle added, topic test pubblished');
-
-	pubsub.unsubscribe(handle2);
-
-	result = [];
-
-	comparison = [
-		{
-			topic: 'test',
-			fruits: ['melon', 'orange']
-		}
-	];
-
-	pubsub.publish('test', ['melon', 'orange']);
-
-	assert.deepEqual(result, comparison, 'handle unsubscribed');
-
-	pubsub.subscribe(handle2);
-
-	result = [];
-
-	comparison = [
-		{
-			topic: 'test',
-			fruits: ['melon', 'orange']
-		},
-		{
-			topic: 'test',
-			fruits: ['melon', 'orange']
-		}
-	];
-
-	pubsub.publish('test', ['melon', 'orange']);
-
-	assert.deepEqual(result, comparison, 'handle subscribed');
-
-});*/
+test("native method()", function(assert) {
+	var el = document.querySelector('.primo');
+	assert.equal(_.belt('.primo').native('clientHeight'), el.clientHeight, ".clientHeight called correclty");
+	assert.deepEqual(_.belt('.primo').native('getBoundingClientRect'), el.getBoundingClientRect(), ".getBoundingClientRect called correclty");
+});
