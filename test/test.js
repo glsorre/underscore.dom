@@ -24,7 +24,7 @@ preventDefault: _preventDefault
 
 module("DOM Selection and Trasversing");
 
-test("DOM Selection - useLiveNodeLists = false", function(assert) {
+test("DOM Selection", function(assert) {
 	var box = _.belt('#box')._wrapped;
 	var boxes = _.belt('.boxes')._wrapped;
 
@@ -32,16 +32,12 @@ test("DOM Selection - useLiveNodeLists = false", function(assert) {
 	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), ".class selected");
 });
 
-test("DOM Selection - liveNodeLists = true", function(assert) {
-	belt.config({useLiveNodeList : true});
-
-	assert.deepEqual(belt.config().useLiveNodeList, true , "belt.config.useLiveNodeList = true");
-
-	var box = _.belt('#box')._wrapped;
+test("find() and paret() method", function(assert) {
+	/*var box = _.belt('#box')._wrapped;
 	var boxes = _.belt('.boxes')._wrapped;
 
 	assert.equal(box, document.getElementById('box'), "#id selcted");
-	assert.deepEqual(boxes, document.getElementsByClassName('boxes'), ".class selected");
+	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), ".class selected");*/
 });
 
 module("DOM Manipulation");
