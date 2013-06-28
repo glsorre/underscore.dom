@@ -1,15 +1,12 @@
 /* TO TEST
 
-native: _nodeListHelper(_native),
-
 on: _nodeListHelper(_on),
 off: _nodeListHelper(_off),
-
-_nodeListHelper
-
-Publisher: _Publisher,
 stopPropagation: _stopPropagation,
 preventDefault: _preventDefault
+
+_nodeListHelper
+Publisher: _Publisher,
 */
 
 module("DOM Selection and Trasversing");
@@ -123,4 +120,15 @@ test("native method()", function(assert) {
 	var el = document.querySelector('.primo');
 	assert.equal(_.belt('.primo').native('clientHeight'), el.clientHeight, ".clientHeight called correclty");
 	assert.deepEqual(_.belt('.primo').native('getBoundingClientRect'), el.getBoundingClientRect(), ".getBoundingClientRect called correclty");
+	assert.equal(_.belt('#box').native('getAttribute', 'class'), "prima seconda terza", ".getAttribute('class') called correctly");
+});
+
+module("Internals");
+
+test("_nodeListHelper()", function(assert) {
+	var els = document.querySelectorAll('.boxes');
+
+	height_get = [120, 120, 120];
+	assert.deepEqual(_.belt(els).native('clientHeight'), height_get, "nodelist processed");
+	assert.deepEqual(_.belt(els).native('clientHeight', '300'), els, "nodelist processed");
 });

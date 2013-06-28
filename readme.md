@@ -5,5 +5,10 @@
 	/ /_/ / / / / /_/ /  __/ /  (__  ) /__/ /_/ / /  /  __/ / /_/ /  __/ / /_  
 	\__,_/_/ /_/\__,_/\___/_/  /____/\___/\____/_/   \___(_)_.___/\___/_/\__/  
 
-dasdsa                                                                                                                                                                                                                         
-                                                                                                                                                                                                                         
+Underscore.belt is a lightweight (3k gzipper) and vanilla oriented javscript framework.
+
+It is meant for projects where jQuery offers too much functionalities.
+
+Expands (Underscore.js)[http://underscorejs.org/].
+
+Distributed under MIT License.                                                                                                                                                                                                                                                                                                                                                                                                                     
