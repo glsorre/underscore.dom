@@ -12,9 +12,9 @@ Publisher: _Publisher,
 module("DOM Selection and Trasversing");
 
 test("DOM Selection", function(assert) {
-	var box = _.belt('#box')._wrapped;
-	var boxes = _.belt('.boxes')._wrapped;
-	var primo = _.belt('.boxes:first-child')._wrapped;
+	var box = _.dom('#box')._wrapped;
+	var boxes = _.dom('.boxes')._wrapped;
+	var primo = _.dom('.boxes:first-child')._wrapped;
 
 	assert.equal(box, document.getElementById('box'), "#id selcted");
 	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), ".class selected");
@@ -22,9 +22,9 @@ test("DOM Selection", function(assert) {
 });
 
 test("find(), parent(), is() methods", function(assert) {
-	var box = _.belt('.primo').parent();
-	var boxes = _.belt('#box').find('.boxes');
-	var is = _.belt('.primo').is('.boxes:first-child')
+	var box = _.dom('.primo').parent();
+	var boxes = _.dom('#box').find('.boxes');
+	var is = _.dom('.primo').is('.boxes:first-child')
 
 	assert.equal(box, document.getElementById('box'), "parent() worked");
 	assert.deepEqual(boxes, document.querySelectorAll('.boxes'), "find() worked");
@@ -34,23 +34,23 @@ test("find(), parent(), is() methods", function(assert) {
 module("DOM Manipulation");
 
 test("Element Class Manipulation", function(assert) {
-	assert.equal(_.belt('#box').hasClass("prima"), true, "has class prima");
+	assert.equal(_.dom('#box').hasClass("prima"), true, "has class prima");
 
-	assert.equal(_.belt('#box').hasClass("none"), false, "has not class none");
+	assert.equal(_.dom('#box').hasClass("none"), false, "has not class none");
 
-	_.belt('#box').addClass("quarta");
+	_.dom('#box').addClass("quarta");
 	assert.equal(document.getElementById('box').className, "prima seconda terza quarta", "added class quarta");
 
-	_.belt('#box').addClass("quarta");
+	_.dom('#box').addClass("quarta");
 	assert.equal(document.getElementById('box').className, "prima seconda terza quarta", "added class quarta");
 
-	_.belt('#box').removeClass("quarta");
+	_.dom('#box').removeClass("quarta");
 	assert.equal(document.getElementById('box').className, "prima seconda terza", "removed class quarta");
 
-	_.belt('#box').toggleClass("terza");
+	_.dom('#box').toggleClass("terza");
 	assert.equal(document.getElementById('box').className, "prima seconda", "removed class terza by toggle");
 
-	_.belt('#box').toggleClass("terza");
+	_.dom('#box').toggleClass("terza");
 	assert.equal(document.getElementById('box').className, "prima seconda terza", "added class terza using toggle");
 });
 
@@ -65,14 +65,14 @@ test("CSS Manipulation", function(assert) {
   		"backgroundColor": "rgb(255, 0, 0)"
 	};
 
-	assert.equal(_.belt('#box').css('width'), '100px', 'single computed style red');
+	assert.equal(_.dom('#box').css('width'), '100px', 'single computed style red');
 
-	_.belt('#box').css('width', '200px');
+	_.dom('#box').css('width', '200px');
 	assert.equal('200px', el.style.width, 'single style modified');
 
-	assert.deepEqual(_.belt('#box').css(['color', 'background-color']), css_get, 'multiple computed style red');
+	assert.deepEqual(_.dom('#box').css(['color', 'background-color']), css_get, 'multiple computed style red');
 	
-	_.belt('#box').css(css_apply)
+	_.dom('#box').css(css_apply)
 	css_result = {
 		"color": el.style.color,
 		"backgroundColor": el.style.backgroundColor
@@ -81,13 +81,13 @@ test("CSS Manipulation", function(assert) {
 });
 
 test("Elements Position and Dimensions", function(assert) {
-	assert.equal(_.belt('.terzo').width(), 120, "width red correctly");
-	assert.equal(_.belt('.terzo').height(), 120, "height red correctly");
+	assert.equal(_.dom('.terzo').width(), 120, "width red correctly");
+	assert.equal(_.dom('.terzo').height(), 120, "height red correctly");
 
 	var el = document.querySelector('.terzo');
-	_.belt('.terzo').width(140)
+	_.dom('.terzo').width(140)
 	assert.equal(160, el.clientWidth, "width red correctly");
-	_.belt('.terzo').height(140)
+	_.dom('.terzo').height(140)
 	assert.equal(160, el.clientHeight, "height red correctly");
 
 	position_get = {
@@ -99,9 +99,9 @@ test("Elements Position and Dimensions", function(assert) {
 		left: -9840
 	}
 
-	assert.deepEqual(_.belt('.terzo').position(), position_get, "position red correctly");
+	assert.deepEqual(_.dom('.terzo').position(), position_get, "position red correctly");
 
-	assert.deepEqual(_.belt('.terzo').offset(), offset_get, "offset red correctly");
+	assert.deepEqual(_.dom('.terzo').offset(), offset_get, "offset red correctly");
 
 	offset_set = {
 		top: 200,
@@ -111,24 +111,30 @@ test("Elements Position and Dimensions", function(assert) {
 		top: -9740,
 		left: -9740
 	}
-	_.belt('.terzo').offset(offset_set);
-	assert.deepEqual(_.belt('.terzo').offset(), offset_get, "offset set correctly");
+	_.dom('.terzo').offset(offset_set);
+	assert.deepEqual(_.dom('.terzo').offset(), offset_get, "offset set correctly");
 	
 });
 
 test("native method()", function(assert) {
 	var el = document.querySelector('.primo');
-	assert.equal(_.belt('.primo').native('clientHeight'), el.clientHeight, ".clientHeight called correclty");
-	assert.deepEqual(_.belt('.primo').native('getBoundingClientRect'), el.getBoundingClientRect(), ".getBoundingClientRect called correclty");
-	assert.equal(_.belt('#box').native('getAttribute', 'class'), "prima seconda terza", ".getAttribute('class') called correctly");
+	assert.equal(_.dom('.primo').native('clientHeight'), el.clientHeight, ".clientHeight called correclty");
+	assert.deepEqual(_.dom('.primo').native('getBoundingClientRect'), el.getBoundingClientRect(), ".getBoundingClientRect called correclty");
+	assert.equal(_.dom('#box').native('getAttribute', 'class'), "prima seconda terza", ".getAttribute('class') called correctly");
 });
 
 module("Internals");
 
 test("_nodeListHelper()", function(assert) {
 	var els = document.querySelectorAll('.boxes');
+	var els_array = []
+	els_array.push.apply(els_array, els);
+	var anchors = document.querySelectorAll('.anchor');
+	var anchors_array = []
+	anchors_array.push.apply(anchors_array, anchors);
 
 	height_get = [120, 120, 120];
-	assert.deepEqual(_.belt(els).native('clientHeight'), height_get, "nodelist processed");
-	assert.deepEqual(_.belt(els).native('clientHeight', '300'), els, "nodelist processed");
+	assert.deepEqual(_.dom(els).native('clientHeight'), height_get, "nodelist processed");
+	assert.deepEqual(_.dom(els).native('clientHeight', '300'), els_array, "nodelist processed");
+	assert.deepEqual(_.dom(els).chain().find('.anchor').native('clientHeight', '300').value(), anchors_array, "nodelist processed and flatted");
 });

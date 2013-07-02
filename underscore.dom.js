@@ -1,8 +1,8 @@
-//  underscore.belt
-//	http://uhpnou.github.io/underscore.string
+//  underscore.dom
+//	http://uhpnou.github.io/underscore.dom
 //	
 //  (c) 2013 Giuseppe Sorrentino <uhpnou aet gmail dot com>
-//  Underscore.belt is freely distributable under the terms of the MIT license.
+//  underscore.dom is freely distributable under the terms of the MIT license.
 //
 //  Some code is borrowed from:
 //		* underscore.string - http://epeli.github.io/underscore.string/
@@ -10,7 +10,7 @@
 //		* matchesSelector polyfill - https://gist.github.com/jonathantneal/3062955
 //		* gator - http://craig.is/riding/gators
 //
-//  Version '0.0.2'
+//  Version '0.1.0'
 //	Target Desktop Support: IE8+, FF 20+, Chrome 26+, Safari 5+, Opera 12+
 //	IE8 is supported only for CSS2 Selectors
 //
@@ -156,13 +156,12 @@
 		return result
 	}
 
-	// Simple function which get the parentNode
+	// Simple function which gets the parentNode
 	function _parent(object) {
 		return object.parentNode;
 	}
 
-	// Simple function to get the current coordinates relative to the offset
-	// parent.
+	// Simple function to get the current coordinates relative to the parent.
 	function _position(object) {
 		if (object.offsetTop && object.offsetLeft) {
 			var o_t = object.offsetTop,
@@ -204,7 +203,8 @@
 	function _width(object, value) {
 		if (!value) {
 			if (object.innerWidth) return object.innerWidth;
-			if (object.clientHeight) return object.clientHeight;
+			if (object.clientWidth) return object.clientWidth;
+			if (object.offsetWidth) return object.offsetWidth;
 		} else {
 			if (typeof value === "number") value += "px";
 			_css(object, 'width', value);
@@ -219,6 +219,7 @@
 		if (!value) {
 			if (object.innerHeight) return object.innerHeight;
 			if (object.clientHeight) return object.clientHeight;
+			if (object.offsetHeight) return object.offsetHeight;
 		} else {
 			if (typeof value === "number") value += "px";
 			_css(object, 'height', value);
@@ -263,7 +264,7 @@
 		e.cancelBubble = true;
 	}
 
-	// Prevents events default behavours
+	// Prevents events default behaviours
 	function _preventDefault(e) {
 		if (e.preventDefault) e.preventDefault();
 		e.returnValue = false;
@@ -361,7 +362,11 @@
 					[].splice.call(args, 0, 2);
 					[].unshift.call(args, object[i]);
 					var result = func.apply(func, args);
-					results.push(result);
+					if (result instanceof NodeList) {
+						results.push.apply(results, result);
+					} else {
+						results.push(result);
+					}
 					i++;
 				}
 
@@ -375,7 +380,7 @@
 		});
 	}
 
-	// The underscore.belt publish/subscribe module
+	// The underscore.dom publish/subscribe module
 	// Returns an object with the publish/subscribe/unsubscribe methods
 	var _Publisher = function(object) {
 		var topics = {};
@@ -459,8 +464,8 @@
 		return result
 	}
 
-	// The _.belt function. It uses _config.defaulEngine as selector
-	function _belt(s, c) {
+	// The _.dom function. It uses _config.defaulEngine as selector
+	function _dom(s, c) {
 		if (typeof s === 'string') {
 			return _(_selectorEngine(s));
 		} else {
@@ -468,8 +473,8 @@
 		}
 	}
 
-	//The _belt object - Underscore.js mixins only
-	var _belt = {
+	//The _dom object - Underscore.js mixins only
+	var _dom = {
 		hasClass: _nodeListHelper(_hasClass),
 		addClass: _nodeListHelper(_addClass),
 		removeClass: _nodeListHelper(_removeClass),
@@ -485,14 +490,14 @@
 		native: _nodeListHelper(_native),
 		on: _nodeListHelper(_on),
 		off: _nodeListHelper(_off),
-		belt: _belt
+		dom: _dom
 	}
 
-	// Integrate _belt with Underscore.js
-	_.mixin(_belt);
+	// Integrate _dom with Underscore.js
+	_.mixin(_dom);
 
-	// Extending the _belt object with non Underscore.js mixins
-	_belt.tools = {
+	// Extending the _dom object with non Underscore.js mixins
+	_dom.tools = {
 		Publisher: _Publisher,
 		stopPropagation: _stopPropagation,
 		preventDefault: _preventDefault
@@ -500,17 +505,17 @@
 
 	// CommonJS module is defined
 	if (typeof exports !== 'undefined') {
-	if (typeof module !== 'undefined' && module.exports) module.exports = belt;
+	if (typeof module !== 'undefined' && module.exports) module.exports = _dom;
 
-	exports.belt = belt;
+	exports._dom = _dom;
 	}
 
 	// Register as a named module with AMD.
 	if (typeof define === 'function' && define.amd)
-		define('underscore.belt', ['underscore-amd'],
-			function(){ return belt; });
+		define('underscore.dom', ['underscore-amd'],
+			function(){ return _dom; });
 
-	// Exporting the belt object
-	root.belt = _belt;
+	// Exporting the dom object
+	root._dom = _dom;
 
 }(this);

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>underscore.belt unit testing</title>
+        <title>underscore.dom unit testing</title>
         <meta name="viewport" content="width=device-width">
     </head>
     <body>
@@ -12,9 +12,18 @@
     
     <div id="qunit-fixture">
 	    <div id="box" class="prima seconda terza" style="background-color: #fff; position: absolute; top: 50px; left: 50px; width:100px; height:100px; opacity:0.5;">#box
-            <div style="position: absolute; top: 100px; width:100px; height:100px; background:#000; margin: 10px; padding: 10px; border: 1px solid #fff;" class="boxes primo">primo box</div>
-            <div style="position: absolute; top: 0px; left: 100px; width:100px; height:100px; background:#000; margin: 10px; padding: 10px; border: 1px solid #fff;" class="boxes secondo">secondo box</div>
-            <div style="position: absolute; top: 100px; left: 100px; width:100px; height:100px; background:#000; margin: 10px; padding: 10px; border: 1px solid #fff;" class="boxes terzo">terzo box</div>
+            <div style="position: absolute; top: 100px; width:100px; height:100px; background:#000; margin: 10px; padding: 10px; border: 1px solid #fff;" class="boxes primo">primo box
+                <a href="#" class="anchor prevent">anchor</a>
+                <a href="#" class="anchor no_prevent">anchor</a>
+            </div>
+            <div style="position: absolute; top: 0px; left: 100px; width:100px; height:100px; background:#000; margin: 10px; padding: 10px; border: 1px solid #fff;" class="boxes secondo">secondo box
+                <a href="#" class="anchor">anchor</a>
+                <a href="#" class="anchor no_prevent">anchor</a>
+            </div>
+            <div style="position: absolute; top: 100px; left: 100px; width:100px; height:100px; background:#000; margin: 10px; padding: 10px; border: 1px solid #fff;" class="boxes terzo">terzo box
+                <a href="#" class="anchor">anchor</a>
+                <a href="#" class="anchor no_prevent">anchor</a>
+            </div>
         </div>
     </div>
 
@@ -22,7 +31,7 @@
     
     <!-- JS -->
     <script src="../components/underscore/underscore.js"></script>
-    <script src="../lib/underscore.belt.js"></script>
+    <script src="../underscore.dom.js"></script>
 
     <!-- QUNIT -->
     <link rel="stylesheet" href="../components/qunit/qunit.css">
