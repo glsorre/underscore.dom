@@ -1,12 +1,11 @@
+	                   __                                         __              
+	  __  ______  ____/ /__  ___________________  ________   ____/ /___  ____ ___ 
+	 / / / / __ \/ __  / _ \/ ___/ ___/ ___/ __ \/ ___/ _ \ / __  / __ \/ __ `__ \
+	/ /_/ / / / / /_/ /  __/ /  (__  ) /__/ /_/ / /  /  __// /_/ / /_/ / / / / / /
+	\__,_/_/ /_/\__,_/\___/_/  /____/\___/\____/_/   \___(_)__,_/\____/_/ /_/ /_/ 
+	                                                                              
 
- 	                   __                                      __         ____ 
-	  __  ______  ____/ /__  ___________________  ________    / /_  ___  / / /_
-	 / / / / __ \/ __  / _ \/ ___/ ___/ ___/ __ \/ ___/ _ \  / __ \/ _ \/ / __/
-	/ /_/ / / / / /_/ /  __/ /  (__  ) /__/ /_/ / /  /  __/ / /_/ /  __/ / /_  
-	\__,_/_/ /_/\__,_/\___/_/  /____/\___/\____/_/   \___(_)_.___/\___/_/\__/  
-
-Underscore.belt is a lightweight (~ 2k gzipped) and vanilla oriented javscript framework.
-Written on top of (Underscore.js)[http://underscorejs.org/].
+Underscore.dom is a lightweight (~ ???k gzipped) and vanilla oriented javscript framework, written on top of (Underscore.js)[http://underscorejs.org/].
 
 It is meant for small projects where jQuery offers too much functionalities.
 

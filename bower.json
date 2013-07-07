@@ -1,11 +1,10 @@
 {
-  "name": "underscore.belt",
-  "version": "0.0.1",
   "dependencies": {
     "underscore": "1.4.x"
   },
   "devDependencies": {
-    "qunit": "1.x.x"
+    "qunit": "1.x.x",
+    "jquery": "1.9.x"
   },
   "ignore": [
     "**/.*",
