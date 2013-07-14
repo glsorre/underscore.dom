@@ -81,10 +81,20 @@
   // Simple function which adds a class to an element
   // Uses Element.classList.add if available
   function _addClass(object, string) {
+    var classes = string.split(' ');
     if (hasClassList) {
-      object.classList.add(string);
+      if (classes.length > 1)
+        object.classList.add.apply(object.classList, classes);
+      else object.classList.add(string);
     } else {
-      if (!_hasClass(object, string)) object.className += ' ' + string;
+      if (classes.length > 1) {
+        var i = classes.length;
+        while (i--) {
+          if (!_hasClass(object, string)) object.className += ' ' + string;
+        }
+      } else {
+        if (!_hasClass(object, string)) object.className += ' ' + string;
+      }
     }
     return object;
   }
@@ -92,29 +102,61 @@
   // Simple function which removes a class to an element
   // Uses Element.classList.remove if available
   function _removeClass(object, string) {
+    var classes = string.split(' ');
     if (hasClassList) {
-      object.classList.remove(string);
+      if (classes.length > 1)
+        object.classList.remove.apply(object.classList, classes);
+      else object.classList.remove(string);
     } else {
-      var array = object.className.split(' '), i = array.length;
-      while (i--) {
-        if (array[i] == string) array.splice(i, 1);
+      if (classes.length > 1) {
+        var array = object.className.split(' '),
+            i = classes.length,
+            j = array.length;
+        while (i--) {
+          while (j--) {
+            if (array[j] == classes[i]) array.splice(j, 1);
+          }
+        }
+      } else {
+        var array = object.className.split(' '), i = array.length;
+        while (i--) {
+          if (array[i] == string) array.splice(i, 1);
+        }
+        object.className = array.join(' ');
       }
-      object.className = array.join(' ');
     }
     return object;
   }
 
   // Simple function which toggles a class to an element
   // Uses Element.classList.toggle if available
-  function _toggleClass(object, string) {
+  function _toggleClass(object, string, state) {
     if (hasClassList) {
-      object.classList.toggle(string);
+      if (!state) object.classList.toggle(string);
+      if (state === true) object.classList.add(string);
+      if (state === false) object.classList.remove(string);
     } else {
-      if (_hasClass(object, string)) {
-        _removeClass(object, string);
-      } else {
-        object.className += ' ' + string;
+      if (!state) {
+        if (_hasClass(object, string)) {
+          _removeClass(object, string);
+        } else {
+          _addClass(object, string);
+        }
       }
+      if (state === true) _addClass(object, string);
+      if (state === false) _removeClass(object, string);
+    }
+  }
+
+  function _toggleClassesHelper(object, string, state) {
+    var classes = string.split(' ');
+    if (classes.length > 1) {
+      var i = classes.length;
+      while (i--) {
+        _toggleClass(object, classes[i], state);
+      }
+    } else {
+      _toggleClass(object, string, state);
     }
     return object;
   }
@@ -352,14 +394,38 @@
     }
   }
 
+/*  function _classesHelper(func) {
+    var classesHelper = _.wrap(func, function(func) {
+      var object = arguments[1];
+      var string = arguments[2];
+      var state = arguments[3];
+      var array = string.split(' ');
+      if (array.length > 1) {
+        var i = array.length;
+        while (i--) {
+          var result = func(object, array[i], state);
+        }
+      } else {
+        var result = func(object, string, state);
+      }
+      return result;
+    });
+    classesHelper.id = func.name;
+    return classesHelper;
+  }*/
+
   function _opFuncHelper(operation, i, args) {
     var object = args[0];
     switch (operation) {
       case '_addClass':
       case '_removeClass':
-      case '_toggleClass':
         var parameter = object.className;
         args[1] = args[1](i, parameter);
+        return args;
+      case '_toggleClass':
+        var parameter = object.className;
+        if (args[2]) args[1] = args[1](i, parameter, args[2]);
+        if (args[2] === undefined) args[1] = args[1](i, parameter);
         return args;
       case '_offset':
         var parameter = _offset(object);
@@ -388,14 +454,14 @@
         var results = [], i = 0;
 
         if (((func.name === '_height' ||
-            func.name === '_width' ||
+            func.name === '_wnameth' ||
             func.name === '_position' ||
             func.name === '_offset') && arguments.length === 2) ||
             (func.name === '_css' && arguments.length === 3)) {
           var args = [];
           [].push.apply(args, arguments);
           [].splice.call(args, 0, 2);
-          [].unshift.call(args, object[0]);
+          [].unshift.call(args, object[i]);
           return func.apply(func, args);
         }
 
@@ -405,18 +471,14 @@
           [].splice.call(args, 0, 2);
           [].unshift.call(args, object[i]);
 
-          console.log(args);
-          console.log(func.name);
-
           if (((func.name === '_addClass' ||
               func.name === '_removeClass' ||
               func.name === '_toggleClass' ||
               func.name === '_offset' ||
-              func.name === '_width' ||
+              func.name === '_wnameth' ||
               func.name === '_height') && typeof args[1] === 'function') ||
               (func.name === '_css' && typeof args[2] === 'function')) {
-            console.log('decoratore!');
-            args = _opFuncHelper(func.name, i, args);
+            args = _opFuncHelper(func.id, i, args);
           }
 
           var result = func.apply(func, args);
@@ -516,7 +578,7 @@
   }
 
   // The _.dom function. It uses _config.defaulEngine as selector
-  function _dom(s, c) {
+  function _dom(s) {
     if (typeof s === 'string') {
       return _(_selectorEngine(s));
     } else {
@@ -529,7 +591,7 @@
     hasClass: _nodeListHelper(_hasClass),
     addClass: _nodeListHelper(_addClass),
     removeClass: _nodeListHelper(_removeClass),
-    toggleClass: _nodeListHelper(_toggleClass),
+    toggleClass: _nodeListHelper(_toggleClassesHelper),
     css: _nodeListHelper(_css),
     is: _nodeListHelper(_is),
     find: _nodeListHelper(_find),
@@ -553,7 +615,7 @@
     preventDefault: _preventDefault
   };
 
-  // CommonJS module is defined
+  // Define a CommonJS module
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) module.exports = _dom;
     exports._dom = _dom;
@@ -567,3 +629,4 @@
   root._dom = _dom;
 
 }(this);
+//# sourceMappingURL=underscore.dom-min.map
