@@ -55,6 +55,10 @@
       Element.prototype.msMatchesSelector ||
       Element.prototype.oMatchesSelector;
 
+  /**
+   * [whichMatchesSelector description]
+   * @type {[type]}
+   */
   if (hasMatchesSelector) var whichMatchesSelector = hasMatchesSelector.name;
 
   // Simple function which checks a if an element has class or not
@@ -197,18 +201,24 @@
   // Simple function which check if an element matches a selector
   // Uses Element.matchesSelector if available
   function _is(object, selector) {
-    if (hasMatchesSelector) {
-      return object[whichMatchesSelector](selector);
-    } else {
-      var nodeList = object.parentNode.querySelectorAll(selector),
-          length = nodeList.length,
-          i = 0;
-      while (i < length) {
-        if (nodeList[i] == object) return true;
-        i++;
+    if (typeof selector === 'string') {
+      if (hasMatchesSelector) {
+        return object[whichMatchesSelector](selector);
+      } else {
+        var nodeList = object.parentNode.querySelectorAll(selector),
+            length = nodeList.length,
+            i = 0;
+        while (i < length) {
+          if (nodeList[i] == object) return true;
+          i++;
+        }
+        return false;
       }
-      return false;
     }
+    if (selector instanceof _)
+      return _.isEqual(object, selector._wrapped);
+    if (_.isElement(selector))
+      return _.isEqual(object, selector);
   }
 
   // Simple function which selects object childnodes through a selector
@@ -220,8 +230,20 @@
   }
 
   // Simple function which gets the parentNode
-  function _parent(object) {
-    return object.parentNode;
+  function _parents(object, selector) {
+    var results = [], prevObject = object;
+    if (typeof selector === 'string') {
+      while (prevObject.parentElement !== null) {
+        prevObject = prevObject.parentElement;
+        if (_is(prevObject, selector)) results.push(prevObject);
+      }
+    } else {
+      while (prevObject.parentElement !== null) {
+        prevObject = prevObject.parentElement;
+        results.push(prevObject);
+      }
+    }
+    return results;
   }
 
   // Simple function to get the current coordinates relative to the parent.
@@ -355,13 +377,12 @@
   // Manages event attachment and event delegation
   // Returns an handle to which can be used with _off
   function _on(object, eventType, selector, callback) {
-    var handle;
     if (typeof object === 'object' && !eventType && !selector && !callback) {
       object.object.addEventListener(object.eventType, object.callback, false);
     }
     if (typeof selector === 'function') {
       _addEvent(object, eventType, selector, false);
-      handle = {
+      var handle = {
         object: object,
         eventType: eventType,
         callback: callback
@@ -375,7 +396,7 @@
         }
       });
       _addEvent(object, eventType, delegate, false);
-      handle = {
+      var handle = {
         object: object,
         eventType: eventType,
         selector: selector,
@@ -393,26 +414,6 @@
       _removeEvent(object, eventType, callback);
     }
   }
-
-/*  function _classesHelper(func) {
-    var classesHelper = _.wrap(func, function(func) {
-      var object = arguments[1];
-      var string = arguments[2];
-      var state = arguments[3];
-      var array = string.split(' ');
-      if (array.length > 1) {
-        var i = array.length;
-        while (i--) {
-          var result = func(object, array[i], state);
-        }
-      } else {
-        var result = func(object, string, state);
-      }
-      return result;
-    });
-    classesHelper.id = func.name;
-    return classesHelper;
-  }*/
 
   function _opFuncHelper(operation, i, args) {
     var object = args[0];
@@ -475,7 +476,7 @@
               func.name === '_removeClass' ||
               func.name === '_toggleClass' ||
               func.name === '_offset' ||
-              func.name === '_wnameth' ||
+              func.name === '_width' ||
               func.name === '_height') && typeof args[1] === 'function') ||
               (func.name === '_css' && typeof args[2] === 'function')) {
             args = _opFuncHelper(func.id, i, args);
@@ -601,7 +602,7 @@
     css: _nodeListHelper(_css),
     is: _nodeListHelper(_is),
     find: _nodeListHelper(_find),
-    parent: _nodeListHelper(_parent),
+    parents: _nodeListHelper(_parents),
     position: _nodeListHelper(_position),
     offset: _nodeListHelper(_offset),
     width: _nodeListHelper(_width),
