@@ -501,6 +501,10 @@
     });
   }
 
+  function _nodeListEq(object, index) {
+    return object[index];
+  }
+
   // The underscore.dom publish/subscribe module
   // Returns an object with the publish/subscribe/unsubscribe methods
   function _Publisher(object) {
@@ -569,7 +573,9 @@
 
   // The default selector engine
   // It is based on document.getElementById and QSA
-  function _selectorEngine(s) {
+  function _selectorEngine(s, c) {
+    if (c) var context = c.match(/^#\w+$/);
+    if (context) return document.getElementById(c.slice(1)).querySelectorAll(s);
     var byId = s.match(/^#\w+$/);
     if (byId) return document.getElementById(s.slice(1));
     var result = document.querySelectorAll(s);
@@ -577,10 +583,10 @@
     return result;
   }
 
-  // The _.dom function. It uses _config.defaulEngine as selector
-  function _dom(s) {
+  // The _.dom function. It uses _selectorEngine as selector
+  function _dom(s, c) {
     if (typeof s === 'string') {
-      return _(_selectorEngine(s));
+      return _(_selectorEngine(s, c));
     } else {
       return _(s);
     }
@@ -602,7 +608,8 @@
     height: _nodeListHelper(_height),
     vanilla: _nodeListHelper(_vanilla),
     on: _nodeListHelper(_on),
-    off: _nodeListHelper(_off)
+    off: _nodeListHelper(_off),
+    eq: _nodeListEq
   };
 
   // Integrate _dom with Underscore.js
