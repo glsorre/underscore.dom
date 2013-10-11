@@ -27,8 +27,8 @@
    * [hasClassList description]
    * @type {Boolean}
    */
-  var hasClassList = (typeof root.Element === 'undefined' ||
-      'classList' in root.document.documentElement);
+  var hasClassList = typeof root.Element === 'undefined' ||
+      'classList' in root.document.documentElement;
 
   /**
    * [hasGetComputedStyle description]
@@ -152,7 +152,7 @@
     }
   }
 
-  function _toggleClassesHelper(object, string, state) {
+  function _toggleClasses(object, string, state) {
     var classes = string.split(' ');
     if (classes.length > 1) {
       var i = classes.length;
@@ -376,8 +376,8 @@
 
   // Manages event attachment and event delegation
   // Returns an handle to which can be used with _off
-  function _on(object, eventType, selector, callback) {
-    if (typeof object === 'object' && !eventType && !selector && !callback) {
+  function _on(object, eventType, selector, data, callback) {
+    if (object.eventType && object.callback) {
       object.object.addEventListener(object.eventType, object.callback, false);
     }
     if (typeof selector === 'function') {
@@ -408,7 +408,7 @@
 
   // Removes event attachment and event delegation created with _on
   function _off(object, eventType, callback) {
-    if (typeof object === 'object' && !eventType && !callback) {
+    if (object.onject, object.eventType, object.callback) {
       _removeEvent(object.object, object.eventType, object.callback);
     } else {
       _removeEvent(object, eventType, callback);
@@ -598,7 +598,7 @@
     hasClass: _nodeListHelper(_hasClass),
     addClass: _nodeListHelper(_addClass),
     removeClass: _nodeListHelper(_removeClass),
-    toggleClass: _nodeListHelper(_toggleClassesHelper),
+    toggleClass: _nodeListHelper(_toggleClasses),
     css: _nodeListHelper(_css),
     is: _nodeListHelper(_is),
     find: _nodeListHelper(_find),

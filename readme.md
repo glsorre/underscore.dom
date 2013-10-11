@@ -5,7 +5,7 @@
 	\__,_/_/ /_/\__,_/\___/_/  /____/\___/\____/_/   \___(_)__,_/\____/_/ /_/ /_/ 
 	                                                                              
 
-Underscore.dom is a lightweight (~ ???k gzipped) and vanilla oriented javscript framework, written on top of (Underscore.js)[http://underscorejs.org/].
+Underscore.dom is a lightweight and vanilla oriented javscript framework, written on top of (Underscore.js)[http://underscorejs.org/], built fro training purposes.
 
 It is meant for small projects where jQuery offers too much functionalities.
 
@@ -14,3 +14,10 @@ IE8 is supported only for CSS2 Selectors
 Target Mobile Support: IOs Safari 3.2+, Andorid Browser 2.1+, BB 7+, Opera Mini 5+
 
 Distributed under MIT License.                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+---
+
+#To Do:
+- [ ] .data(), .attr(), .prop()
+- [ ] .append()/.prepend(), .after()/.before(), .html(), .text()
+- [ ] .ajax()
